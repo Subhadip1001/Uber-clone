@@ -2,7 +2,7 @@ const rideModel = require('../Models/ride.model');
 const mapService = require('../Services/maps.service');
 const crypto = require('crypto');
 
-async function getfare(pickup, destination) {
+async function getFare(pickup, destination) {
     if(!pickup || !destination){
         throw new Error('Pickup and destination are required');
     }
@@ -42,12 +42,12 @@ function generateOtp(num){
 }
 
 
-module.exports.createRide = async(user, pickup, destination, vehicleType)=>{
+module.exports.createRide = async({ user, pickup, destination, vehicleType })=>{
     if(!user || !pickup || !destination || !vehicleType){
         throw new Error('User, pickup, destination and vehicleType are required');
     }
 
-    const fare = await getfare(pickup, destination);
+    const fare = await getFare(pickup, destination);
 
     const ride = rideModel.create({
         user,
