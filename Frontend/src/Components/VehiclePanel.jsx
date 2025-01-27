@@ -27,13 +27,14 @@ const VehiclePanel = (props) => {
           <h4 className="font-medium">
             UberGo{" "}
             <span>
-              <i className="ri-user-3-fill">4</i>
+              <i className="ri-user-3-fill">3</i>
             </span>
           </h4>
           <h5 className="text-xs">2 mins away</h5>
           <p className="font-medium text-xs">Affordable, compact rides</p>
         </div>
-        <h2 className="text-2xl font-semibold">₹193.20</h2>
+        <h2 className="text-2xl font-semibold">₹{props.fare.car}</h2>
+      
       </div>
 
       <div className="flex items-center justify-between hover:border-2 hover:border-black p-2 rounded-lg">
@@ -43,15 +44,15 @@ const VehiclePanel = (props) => {
         />
         <div>
           <h4 className="font-medium">
-            UberGo{" "}
+            Moto{" "}
             <span>
-              <i className="ri-user-3-fill">4</i>
+              <i className="ri-user-3-fill">1</i>
             </span>
           </h4>
           <h5 className="text-xs">2 mins away</h5>
-          <p className="font-medium text-xs">Affordable, compact rides</p>
+          <p className="font-medium text-xs">Affordable, motorcycle rides</p>
         </div>
-        <h2 className="text-2xl font-semibold">₹193.20</h2>
+        <h2 className="text-2xl font-semibold">₹{props.fare.moto}</h2>
       </div>
 
       <div className="flex items-center justify-between hover:border-2 hover:border-black p-2 rounded-lg">
@@ -61,15 +62,15 @@ const VehiclePanel = (props) => {
         />
         <div>
           <h4 className="font-medium">
-            UberGo{" "}
+            UberAuto{" "}
             <span>
-              <i className="ri-user-3-fill">4</i>
+              <i className="ri-user-3-fill">2</i>
             </span>
           </h4>
           <h5 className="text-xs">2 mins away</h5>
-          <p className="font-medium text-xs">Affordable, compact rides</p>
+          <p className="font-medium text-xs">Affordable, auto rides</p>
         </div>
-        <h2 className="text-2xl font-semibold">₹193.20</h2>
+        <h2 className="text-2xl font-semibold">₹{props.fare.auto}</h2>
       </div>
     </>
   );
