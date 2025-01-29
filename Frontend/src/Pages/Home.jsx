@@ -21,6 +21,7 @@ const Home = () => {
   const [destinationSuggestions, setDestinationSuggestions] = useState([]);
   const [activeField, setActiveField] = useState(null);
   const [fare, setFare] = useState({});
+  const [vehicleType, setVehicleType] = useState(null);
 
   const panelRef = useRef(null);
   const vehicleRef = useRef(null);
@@ -164,8 +165,6 @@ const Home = () => {
       }
     );
     setFare(response.data.fare);
-    setPickup("");
-    setDestination("");
   }
 
   async function createRide(vehicleType) {
@@ -273,10 +272,12 @@ const Home = () => {
           setVehiclePanel={setVehiclePanel}
           setConfirmVehiclePanel={setConfirmVehiclePanel}
           fare={fare}
+          createRide={createRide}
+          selectedVehicle={setVehicleType}
         />
       </div>
 
-      {/* Car details page */}
+      {/* Car details page / confirm your ride */}
       <div
         ref={vehicleInfoRef}
         className="fixed z-10 w-screen bottom-0 bg-white p-5 translate-y-full"
@@ -285,6 +286,11 @@ const Home = () => {
           setVehiclePanel={setVehiclePanel}
           setConfirmVehiclePanel={setConfirmVehiclePanel}
           setLookingForDriverPanel={setLookingForDriverPanel}
+          pickup={pickup}
+          destination={destination}
+          fare={fare}
+          vehicleType={vehicleType}
+          createRide={createRide}
         />
       </div>
 
@@ -296,6 +302,10 @@ const Home = () => {
         <LookingForDriver
           setConfirmVehiclePanel={setConfirmVehiclePanel}
           setLookingForDriverPanel={setLookingForDriverPanel}
+          pickup={pickup}
+          destination={destination}
+          fare={fare}
+          vehicleType={vehicleType}
         />
       </div>
 
