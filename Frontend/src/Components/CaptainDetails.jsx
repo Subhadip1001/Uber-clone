@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import { CaptainDataContext } from "../Context/CaptainContext";
 
 const CaptainDetails = () => {
+  const { captain } = useContext(CaptainDataContext);
+
+  if (!captain) {
+    return <p>Loading...</p>; // Handle missing data gracefully
+  }
+
   return (
     <div>
       <div className="mb-10 mt-4 flex justify-between items-center">
@@ -9,7 +16,7 @@ const CaptainDetails = () => {
             className="h-12 w-12 rounded-full"
             src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg"
           />
-          <h3 className="text-lg font-semibold">Captain Test</h3>
+          <h3 className="text-lg font-semibold">{captain.fullname.firstname} {captain.fullname.lastname}</h3>
         </div>
         <div className="flex flex-col items-center ">
           <h3 className="text-xl font-bold">₹200.10</h3>

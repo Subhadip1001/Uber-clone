@@ -6,39 +6,45 @@ import axios from 'axios';
 const CaptainProtectedWrapper = ({ children }) => {
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-    // const { captain, setCaptain } = useContext(CaptainDataContext);
-    // const [isLoading, setIsLoading] = useState(true);
+    const { captain, setCaptain } = useContext(CaptainDataContext);
+    const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(()=>{
-        try {
-            if(!token){
-                navigate('/captain-login');
-            }
-        } catch (error) {
-            console.log('Error : ' + error);
-        }
-    },[token, navigate])
+    useEffect(() => {
+      const fetchCaptainDetails = async () => {
+          try {
+              if (!token) {
+                  navigate('/captain-login');
+                  return;
+              }
 
-    // axios.get(`${import.meta.env.VITE_BASE_URL}/captains/profile`, {
-    //     headers:{
-    //         Authorization: `Bearer ${token}`
-    //     }
-    // }).then(res=>{
-    //     if(res.status === 200){
-    //         setCaptain(res.data.captain);
-    //         setIsLoading(false);
-    //     }
-    // }).catch(err=>{
-    //     console.log(err);
-    //     localStorage.removeItem('token');
-    //     navigate('/captain-login');
-    // })
+              const response = await axios.get(
+                  `${import.meta.env.VITE_BASE_URL}/captains/profile`,
+                  {
+                      headers: {
+                          Authorization: `Bearer ${token}`
+                      }
+                  }
+              );
 
-    // if(isLoading){
-    //     return(
-    //         <h2>Loading...</h2>
-    //     )
-    // }
+              if (response.status === 200) {
+                  setCaptain(response.data.captain);
+              }
+              setIsLoading(false);
+          } catch (error) {
+              console.error(error);
+              localStorage.removeItem('token');
+              navigate('/captain-login');
+          }
+      };
+
+      fetchCaptainDetails();
+  }, [token, navigate, setCaptain]);
+
+    if(isLoading){
+        return(
+            <h2>Loading...</h2>
+        )
+    }
 
   return (
     <>

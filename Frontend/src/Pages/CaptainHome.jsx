@@ -8,7 +8,7 @@ import ConfirmToPickup from "../Components/ConfirmToPickup";
 import CaptainRiding from "./CaptainRiding";
 
 const CaptainHome = () => {
-  const [ridePopupPanel, setRidePopupPanel] = useState(true);
+  const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmToPickupPanel, setConfirmToPickupPanel] = useState(false);
   const [captainRidePanel, setCaptainRidePanel] = useState(false);
 
@@ -69,10 +69,10 @@ const CaptainHome = () => {
           src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
         />
         <Link
-          to="/captain-log"
+          to="/captains/logout"
           className="fixed h-10 w-10 bg-white flex items-center justify-center rounded-full right-3 top-3 text-2xl text-gray-500"
         >
-          <i class="ri-logout-box-r-line"></i>
+          <i className="ri-logout-box-r-line"></i>
         </Link>
       </div>
       <div className="h-[60%]">
