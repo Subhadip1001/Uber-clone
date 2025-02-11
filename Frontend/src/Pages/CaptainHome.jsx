@@ -8,7 +8,7 @@ import ConfirmToPickup from "../Components/ConfirmToPickup";
 import CaptainRiding from "./CaptainRiding";
 
 const CaptainHome = () => {
-  const [ridePopupPanel, setRidePopupPanel] = useState(false);
+  const [ridePopupPanel, setRidePopupPanel] = useState(true);
   const [confirmToPickupPanel, setConfirmToPickupPanel] = useState(false);
   const [captainRidePanel, setCaptainRidePanel] = useState(false);
 

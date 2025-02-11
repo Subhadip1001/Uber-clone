@@ -17,15 +17,20 @@ function intializeSocket(server){
 
         socket.on('join', async (data)=>{
             const {userId, userType} = data;
+            console.log('Join event recieved: ', data); // add
 
             if(userType === 'user'){
-                await userModel.findByIdAndUpdate(userId, {
-                    socketId: socket.id
-                });
+                await userModel.findByIdAndUpdate(userId,
+                    {socketId: socket.id},
+                    {new: true}
+                );
+                console.log(`user id is : ${userId}`); // add
             }else if(userType === 'captain'){
-                await captainModel.findByIdAndUpdate(userId, {
-                    socketId: socket.id
-                });
+                await captainModel.findByIdAndUpdate(userId, 
+                    {socketId: socket.id},
+                    {new: true}
+                );
+                console.log(`captain id is : ${userId}`); // add
             }
         });
 

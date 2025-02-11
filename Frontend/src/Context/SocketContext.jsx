@@ -14,15 +14,22 @@ const SocketProvider = ({ children })=>{
         socket.on('disconnect', ()=>{
             console.log('Disconnect from server');
         });
+
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+        };
+        
     }, []);
 
-    const sendMessage = (eventName, message)=>{
-        socket.emit(eventName, message);
-    }
+    // const sendMessage = (eventName, message)=>{
+    //     // console.log(`sending message from ${message} to ${eventName}`)
+    //     socket.emit(eventName, message);
+    // }
 
-    const receiveMessage = (eventname, callback)=>{
-        socket.on(eventname, callback);
-    }
+    // const receiveMessage = (eventname, callback)=>{
+    //     socket.on(eventname, callback);
+    // }
 
     // return () => {
     //     socket.off('connect');
@@ -30,7 +37,7 @@ const SocketProvider = ({ children })=>{
     // };
 
     return (
-        <SocketContext.Provider value={{ sendMessage, receiveMessage}}>
+        <SocketContext.Provider value={{ socket }}>
             {children}
         </SocketContext.Provider>
     )

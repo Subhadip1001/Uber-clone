@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -8,6 +8,8 @@ import ConfirmedVehiclePanel from "../Components/ConfirmedVehiclePanel";
 import LookingForDriver from "../Components/LookingForDriver";
 import WatingForDriver from "../Components/WatingForDriver";
 import axios from "axios";
+import { SocketContext } from "../Context/SocketContext";
+import { UserDataContext } from "../Context/UserContext";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -23,11 +25,27 @@ const Home = () => {
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
 
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDataContext);
+
   const panelRef = useRef(null);
   const vehicleRef = useRef(null);
   const vehicleInfoRef = useRef(null);
   const lookingForDriverRef = useRef(null);
   const waitingForDriverRef = useRef(null);
+
+  useEffect(()=>{
+    // if(user && socket){
+    //   socket.emit("join", { userId: user._id, userType: "user" })
+    // }
+    if (user?._id && socket?.connected) {
+      console.log('Emitting join event with user ID:', user._id);
+      socket.emit('join', { 
+          userId: user._id, 
+          userType: 'user' 
+      });
+    }
+  },[ user, socket ])
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -44,7 +62,7 @@ const Home = () => {
         );
         setPickupSuggestions(response.data); 
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
   };
 
@@ -63,7 +81,7 @@ const Home = () => {
         setDestinationSuggestions(response.data);
         // console.log(destinationSuggestions);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
   };
 
