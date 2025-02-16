@@ -26,7 +26,7 @@ const Home = () => {
   const [vehicleType, setVehicleType] = useState(null);
 
   const { socket } = useContext(SocketContext);
-  const { user } = useContext(UserDataContext);
+  const { user, loading } = useContext(UserDataContext);
 
   const panelRef = useRef(null);
   const vehicleRef = useRef(null);
@@ -34,22 +34,19 @@ const Home = () => {
   const lookingForDriverRef = useRef(null);
   const waitingForDriverRef = useRef(null);
 
-  useEffect(()=>{
-    // if(user && socket){
-    //   socket.emit("join", { userId: user._id, userType: "user" })
-    // }
-    if (user?._id && socket?.connected) {
-      console.log('Emitting join event with user ID:', user._id);
-      socket.emit('join', { 
-          userId: user._id, 
-          userType: 'user' 
-      });
+
+  useEffect(() => {
+    if (user && socket) {
+        console.log('User data in Home:', user);
+        socket.emit("join", { 
+            userType: "user", 
+            userId: user._id  // Now user._id will be available
+        });
     }
-  },[ user, socket ])
+}, [user, socket]);
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
-    // setActiveField("pickup");
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
@@ -62,7 +59,6 @@ const Home = () => {
         );
         setPickupSuggestions(response.data); 
       } catch (error) {
-        // console.error(error);
       }
   };
 
@@ -79,9 +75,7 @@ const Home = () => {
           }
         );
         setDestinationSuggestions(response.data);
-        // console.log(destinationSuggestions);
       } catch (error) {
-        // console.error(error);
       }
   };
 
@@ -195,7 +189,7 @@ const Home = () => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    console.log(response.data);
+    // console.log(response.data);
   }
 
   return (

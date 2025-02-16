@@ -7,7 +7,7 @@ let io;
 function intializeSocket(server){
     io = socketIo(server,{
         cors:{
-            origine: '*',
+            origin: '*',
             methods: ['GET', 'POST']
         }
     });
@@ -16,21 +16,23 @@ function intializeSocket(server){
         console.log(`Client connected: ${socket.id}`);
 
         socket.on('join', async (data)=>{
-            const {userId, userType} = data;
-            console.log('Join event recieved: ', data); // add
+            const { userId, userType } = data;
+
+            if (!userId || !userType) {
+                console.error('Missing required data:', { userId, userType });
+                return;
+            }
+
+            console.log('Join event received:', { userId, userType });
 
             if(userType === 'user'){
                 await userModel.findByIdAndUpdate(userId,
                     {socketId: socket.id},
-                    {new: true}
                 );
-                console.log(`user id is : ${userId}`); // add
             }else if(userType === 'captain'){
                 await captainModel.findByIdAndUpdate(userId, 
                     {socketId: socket.id},
-                    {new: true}
                 );
-                console.log(`captain id is : ${userId}`); // add
             }
         });
 
