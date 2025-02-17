@@ -28,6 +28,31 @@ const CaptainHome = () => {
         userId: captain._id,
       });
     }
+
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          // console.log({
+          //     userId: captain._id,
+          //     location: {
+          //       ltd: position.coords.latitude,
+          //       lng: position.coords.longitude,
+          //     }
+          //   }
+          // );
+          socket.emit("update-location-captain", {
+            userId: captain._id,
+            location: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          });
+        });
+      }
+    };
+
+    const locationInterval = setInterval(updateLocation, 10000);
+    updateLocation()
   }, [captain, socket]);
 
   useGSAP(
@@ -99,17 +124,29 @@ const CaptainHome = () => {
       <div className="h-[40%] p-5">
         <CaptainDetails />
       </div>
-        {/* pop-up */}
-      <div ref={ridePopupRef} className="fixed z-10 w-screen bottom-0 bg-white p-5">
-        <RidePopUp setRidePopupPanel={setRidePopupPanel} setConfirmToPickupPanel={setConfirmToPickupPanel}/>
+      {/* pop-up */}
+      <div
+        ref={ridePopupRef}
+        className="fixed z-10 w-screen bottom-0 bg-white p-5"
+      >
+        <RidePopUp
+          setRidePopupPanel={setRidePopupPanel}
+          setConfirmToPickupPanel={setConfirmToPickupPanel}
+        />
       </div>
       {/* confirm to pick-up */}
-      <div ref={confirmToPickupRef} className="fixed h-screen w-screen z-10 bottom-0 bg-white">
-        <ConfirmToPickup setConfirmToPickupPanel={setConfirmToPickupPanel}/>
+      <div
+        ref={confirmToPickupRef}
+        className="fixed h-screen w-screen z-10 bottom-0 bg-white"
+      >
+        <ConfirmToPickup setConfirmToPickupPanel={setConfirmToPickupPanel} />
       </div>
       {/* Captain riding  */}
-      <div ref={captainRideRef} className="fixed h-screen w-screen z-10 bottom-0 bg-white">
-        <CaptainRiding/>
+      <div
+        ref={captainRideRef}
+        className="fixed h-screen w-screen z-10 bottom-0 bg-white"
+      >
+        <CaptainRiding />
       </div>
     </div>
   );
