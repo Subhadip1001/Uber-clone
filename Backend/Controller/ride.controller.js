@@ -7,10 +7,9 @@ module.exports.createRide = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
+  
+  const { userId, pickup, destination, vehicleType } = req.body;
   try {
-    const { pickup, destination, vehicleType } = req.body;
-
     const ride = await rideService.createRide({
       user: req.user._id,
       pickup,
@@ -23,8 +22,7 @@ module.exports.createRide = async (req, res) => {
     console.log(pickupCoordinates);
 
     const captainsInRadius = await mapsService.getCaptainsInTheRadius(pickupCoordinates.lat, pickupCoordinates.lng, 2);
-
-    console.log("captain in radious" + captainsInRadius);
+    console.log(captainsInRadius);
 
   } catch (error) {
     res.status(500).json({ message: error.message });

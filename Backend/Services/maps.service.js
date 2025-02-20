@@ -69,19 +69,20 @@ module.exports.getAutoCompleteSuggestions = async(input)=>{
     }
 }
 
-module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
+module.exports.getCaptainsInTheRadius = async (ltd, lng, radius, vehicleType) => {
     if (!ltd || !lng || !radius) {
         throw new Error('Latitude, Longitude and Radius are required');
     }
 
     const captains = await captainModel.find({
         status: 'active',
+        isOnline: true,
+        'vehicle.vehicleType': vehicleType,
         location: {
             $geoWithin: {
                 $centerSphere: [[ltd, lng], radius / 6371]
             }
         },
-        isOnline: true
     });
 
     return captains;
