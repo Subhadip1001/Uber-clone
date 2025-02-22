@@ -14,10 +14,15 @@ router.post('/create',
 );
 
 router.get('/get-fare',
-    authMiddleware.authUser,
-    query('pickup').isString().isLength({ min: 3}).withMessage('Invaild pickup location'),
-    query('destination').isString().isLength({ min: 3}).withMessage('Invaild destination location'),
-    rideController.getFare
+    authMiddleware.authCaptain,
+    body('rideId').isMongoId().withMessage('Invalid ride id'),
+    rideController.confirmRide
+)
+
+router.post('/confirm',
+    authMiddleware.authCaptain,
+    body('rideId').isMongoId().withMessage('Invalid ride id'),
+    rideController.confirmRide
 )
 
 module.exports = router;

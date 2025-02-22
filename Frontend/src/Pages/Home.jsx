@@ -24,6 +24,7 @@ const Home = () => {
   const [activeField, setActiveField] = useState(null);
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
+  const [ride, setRide] = useState(null);
 
   const { socket } = useContext(SocketContext);
   const { user, loading } = useContext(UserDataContext);
@@ -40,10 +41,16 @@ const Home = () => {
         console.log('User data in Home:', user);
         socket.emit("join", { 
             userType: "user", 
-            userId: user._id  // Now user._id will be available
+            userId: user._id
         });
     }
 }, [user, socket]);
+
+socket.on('ride-confirm', ride=>{
+  setVehiclePanel(false);
+  setWaitingForDriver(true);
+  setRide(ride);
+})
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -325,6 +332,7 @@ const Home = () => {
       <div className="fixed z-10 w-screen bottom-0 bg-white p-5 translate-y-full">
         <WatingForDriver
           ref={waitingForDriverRef}
+          setwaitingForDriver={setWaitingForDriver}
           waitingForDriver={waitingForDriver}
         />
       </div>

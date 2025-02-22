@@ -8,11 +8,13 @@ import ConfirmToPickup from "../Components/ConfirmToPickup";
 import CaptainRiding from "./CaptainRiding";
 import { SocketContext } from "../Context/SocketContext";
 import { CaptainDataContext } from "../Context/CaptainContext";
+import { set } from "mongoose";
 
 const CaptainHome = () => {
-  const [ridePopupPanel, setRidePopupPanel] = useState(true);
+  const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmToPickupPanel, setConfirmToPickupPanel] = useState(false);
   const [captainRidePanel, setCaptainRidePanel] = useState(false);
+  const [ride, setRide] = useState(null);
 
   const ridePopupRef = useRef(null);
   const confirmToPickupRef = useRef(null);
@@ -54,6 +56,28 @@ const CaptainHome = () => {
     const locationInterval = setInterval(updateLocation, 10000);
     updateLocation()
   }, [captain, socket]);
+
+  socket.on("new-ride", (data) => {
+    console.log(data);
+    setRide(data);
+    setRidePopupPanel(true);
+  });
+
+  async function confirmRide(){
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm-ride`, {
+      userId: captain._id,
+      rideId: ride._id,
+    },
+    {
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }
+  );
+
+    setRidePopupPanel(false);
+    setConfirmToPickupPanel(true);
+  }
 
   useGSAP(
     function () {
@@ -130,8 +154,10 @@ const CaptainHome = () => {
         className="fixed z-10 w-screen bottom-0 bg-white p-5"
       >
         <RidePopUp
+        ride = {ride}
           setRidePopupPanel={setRidePopupPanel}
           setConfirmToPickupPanel={setConfirmToPickupPanel}
+          confirmRide={confirmRide}
         />
       </div>
       {/* confirm to pick-up */}
