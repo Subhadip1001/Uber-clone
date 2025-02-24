@@ -8,7 +8,6 @@ import ConfirmToPickup from "../Components/ConfirmToPickup";
 import CaptainRiding from "./CaptainRiding";
 import { SocketContext } from "../Context/SocketContext";
 import { CaptainDataContext } from "../Context/CaptainContext";
-import { set } from "mongoose";
 
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
@@ -165,7 +164,9 @@ const CaptainHome = () => {
         ref={confirmToPickupRef}
         className="fixed h-screen w-screen z-10 bottom-0 bg-white"
       >
-        <ConfirmToPickup setConfirmToPickupPanel={setConfirmToPickupPanel} />
+        <ConfirmToPickup
+        ride={ride}
+        setConfirmToPickupPanel={setConfirmToPickupPanel} />
       </div>
       {/* Captain riding  */}
       <div

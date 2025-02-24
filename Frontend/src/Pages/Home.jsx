@@ -10,6 +10,7 @@ import WatingForDriver from "../Components/WatingForDriver";
 import axios from "axios";
 import { SocketContext } from "../Context/SocketContext";
 import { UserDataContext } from "../Context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -25,6 +26,8 @@ const Home = () => {
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
   const [ride, setRide] = useState(null);
+
+  const navigate = useNavigate();
 
   const { socket } = useContext(SocketContext);
   const { user, loading } = useContext(UserDataContext);
@@ -50,6 +53,11 @@ socket.on('ride-confirm', ride=>{
   setVehiclePanel(false);
   setWaitingForDriver(true);
   setRide(ride);
+});
+
+socket.on('ride-started', ride=>{
+  setWaitingForDriver(false);
+  navigate(`/riding`);
 })
 
   const handlePickupChange = async (e) => {
@@ -332,6 +340,7 @@ socket.on('ride-confirm', ride=>{
       <div className="fixed z-10 w-screen bottom-0 bg-white p-5 translate-y-full">
         <WatingForDriver
           ref={waitingForDriverRef}
+          ride={ride}
           setwaitingForDriver={setWaitingForDriver}
           waitingForDriver={waitingForDriver}
         />

@@ -1,11 +1,32 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ConfirmToPickup = (props) => {
   const [otp, setOtp] = useState("");
-  const submitHandel = (e) => {
+
+  const navigate = useNavigate();
+
+  const submitHandel = async(e) => {
     e.preventDefault();
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`,{
+      rideId: props.rideId._id,
+      otp: otp
+    },{
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if(response.status === 200){
+      props.setConfirmToPickupPanel(false);
+      props.setRidePopUpPanel(false);
+      navigate('./captain-riding');
+    }
   };
+
   return (
     <div className="p-5">
       <i

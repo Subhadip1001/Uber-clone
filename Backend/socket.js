@@ -36,24 +36,49 @@ function intializeSocket(server){
             }
         });
 
-        socket.on('update-location-captain', async (data)=>{
+        // socket.on('update-location-captain', async (data)=>{
+        //     const { userId, location } = data;
+        //     if(!userId || !location){
+        //         console.error('Missing required data:', { userId, location });
+        //         return;
+        //     }
+
+        //     if (!location.lat || !location.lng) {
+        //         return socket.emit('error', {message: 'Invalid location data'});
+        //     }
+
+        //     await captainModel.findByIdAndUpdate(userId, {
+        //         location:{
+        //             lat: location.lat,
+        //             lng: location.lng
+        //         }
+        //     });
+        // });
+
+        socket.on('update-location-captain', async (data) => {
             const { userId, location } = data;
-            if(!userId || !location){
-                console.error('Missing required data:', { userId, location });
-                return;
-            }
-
-            if (!location.lat || !location.lng) {
-                return socket.emit('error', {message: 'Invalid location data'});
-            }
-
-            await captainModel.findByIdAndUpdate(userId, {
-                location:{
-                    lat: location.lat,
-                    lng: location.lng
+            try {
+                if (!userId || !location?.lat || !location?.lng) {
+                    console.error('Invalid location data:', data);
+                    return;
                 }
-            });
+        
+                const updatedCaptain = await captainModel.findByIdAndUpdate(
+                    userId,
+                    {
+                        location: {
+                            type: 'Point',
+                            coordinates: [location.lng, location.lat] // MongoDB uses [longitude, latitude]
+                        }
+                    },
+                    { new: true }
+                );
+                console.log('Updated captain location:', updatedCaptain);
+            } catch (error) {
+                console.error('Error updating captain location:', error);
+            }
         });
+
 
         socket.on('disconnect', ()=>{
             console.log(`Clinet disconnected: ${socket.id}`);

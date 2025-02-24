@@ -69,21 +69,47 @@ module.exports.getAutoCompleteSuggestions = async(input)=>{
     }
 }
 
-module.exports.getCaptainsInTheRadius = async (ltd, lng, radius, vehicleType) => {
-    if (!ltd || !lng || !radius) {
+// module.exports.getCaptainsInTheRadius = async (ltd, lng, radius, vehicleType) => {
+//     if (!ltd || !lng || !radius) {
+//         throw new Error('Latitude, Longitude and Radius are required');
+//     }
+
+//     const captains = await captainModel.find({
+//         status: 'active',
+//         isOnline: true,
+//         'vehicle.vehicleType': vehicleType,
+//         location: {
+//             $geoWithin: {
+//                 $centerSphere: [[ltd, lng], radius / 6371]
+//             }
+//         },
+//     });
+
+//     return captains;
+// }
+
+module.exports.getCaptainsInTheRadius = async (lat, lng, radius, vehicleType) => {
+    if (!lat || !lng || !radius) {
         throw new Error('Latitude, Longitude and Radius are required');
     }
 
+    console.log('Searching for captains:', { lat, lng, radius, vehicleType });
+
     const captains = await captainModel.find({
         status: 'active',
-        isOnline: true,
         'vehicle.vehicleType': vehicleType,
         location: {
-            $geoWithin: {
-                $centerSphere: [[ltd, lng], radius / 6371]
-            }
+            $exists: true,
+            $ne: null
+        }
+    }).where('location').nearSphere({
+        $geometry: {
+            type: 'Point',
+            coordinates: [lng, lat] // MongoDB uses [longitude, latitude] order
         },
+        $maxDistance: radius * 1000 // Convert km to meters
     });
 
+    console.log('Found captains:', captains);
     return captains;
-}
+};
