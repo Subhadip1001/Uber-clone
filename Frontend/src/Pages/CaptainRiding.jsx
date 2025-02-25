@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import FinishRide from '../Components/FinishRide';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import LiveTracking from '../Components/LiveTracking';
 
 const CaptainRiding = () => {
     const [finishRidePanel, setFinishRidePanel] = useState(false);
@@ -26,7 +27,7 @@ const CaptainRiding = () => {
   return (
     <div className='h-screen'>
       <div className='h-[80%]'>
-        <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"/>
+        <LiveTracking/>
       </div>
       <div className='h-[20%] bg-yellow-400 flex items-center justify-between p-3'>
         <h2 className='font-semibold text-lg'>Complete ride in 3 mins</h2>

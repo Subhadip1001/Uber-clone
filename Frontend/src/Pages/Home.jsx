@@ -11,6 +11,7 @@ import axios from "axios";
 import { SocketContext } from "../Context/SocketContext";
 import { UserDataContext } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
+import LiveTracking from "../Components/LiveTracking";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -217,10 +218,7 @@ socket.on('ride-started', ride=>{
 
       {/* Map image */}
       <div>
-        <img
-          className="w-screen h-screen cover"
-          src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
-        />
+        <LiveTracking/>
       </div>
 
       {/* pick-up and destination panel */}

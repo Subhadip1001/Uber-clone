@@ -88,6 +88,32 @@ module.exports.getAutoCompleteSuggestions = async(input)=>{
 //     return captains;
 // }
 
+// module.exports.getCaptainsInTheRadius = async (lat, lng, radius, vehicleType) => {
+//     if (!lat || !lng || !radius) {
+//         throw new Error('Latitude, Longitude and Radius are required');
+//     }
+
+//     console.log('Searching for captains:', { lat, lng, radius, vehicleType });
+
+//     const captains = await captainModel.find({
+//         status: 'active',
+//         'vehicle.vehicleType': vehicleType,
+//         location: {
+//             $exists: true,
+//             $ne: null
+//         }
+//     }).where('location').nearSphere({
+//         $geometry: {
+//             type: 'Point',
+//             coordinates: [lng, lat] // MongoDB uses [longitude, latitude] order
+//         },
+//         $maxDistance: radius * 1000 // Convert km to meters
+//     });
+
+//     console.log('Found captains:', captains);
+//     return captains;
+// };
+
 module.exports.getCaptainsInTheRadius = async (lat, lng, radius, vehicleType) => {
     if (!lat || !lng || !radius) {
         throw new Error('Latitude, Longitude and Radius are required');
@@ -95,21 +121,22 @@ module.exports.getCaptainsInTheRadius = async (lat, lng, radius, vehicleType) =>
 
     console.log('Searching for captains:', { lat, lng, radius, vehicleType });
 
-    const captains = await captainModel.find({
-        status: 'active',
-        'vehicle.vehicleType': vehicleType,
-        location: {
-            $exists: true,
-            $ne: null
-        }
-    }).where('location').nearSphere({
-        $geometry: {
-            type: 'Point',
-            coordinates: [lng, lat] // MongoDB uses [longitude, latitude] order
-        },
-        $maxDistance: radius * 1000 // Convert km to meters
-    });
+    try {
+        const captains = await captainModel.find({
+            status: 'active',
+            'vehicle.vehicleType': vehicleType,
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[lng, lat], radius / 6371] // Convert radius to radians
+                }
+            }
+        });
 
-    console.log('Found captains:', captains);
-    return captains;
+        console.log('Found captains:', captains);
+        return captains;
+    } catch (error) {
+        console.error('Error finding captains:', error);
+        throw error;
+    }
 };
+

@@ -57,27 +57,22 @@ const captainSchema = new mongoose.Schema({
             enum: ['car', 'motorcycle', 'auto']
         }
     },
-    // location:{
-    //     lat:{
-    //         type: Number,
-    //     },
-    //     lng:{
-    //         type: Number
-    //     }
-    // }
-
-    location: {
-        type: {
-            type: String,
-            enum: ['Point'],
-            default: 'Point'
+    location:{
+        lat:{
+            type: Number,
         },
-        coordinates: {
-            type: [Number], // [longitude, latitude]
-            index: '2dsphere'
+        lng:{
+            type: Number
         }
-    }
+    },
+    status: {
+        type: String,
+        enum: ['active', 'inactive'],
+        default: 'active'  // Changed from 'inactive' to 'active'
+    },
 })
+
+captainSchema.index({ location: '2dsphere' });
 
 captainSchema.methods.generateAuthToken = function(){
     const token = jwt.sign({_id: this._id}, process.env.JWT_SECRET, {expiresIn: '24h'});
